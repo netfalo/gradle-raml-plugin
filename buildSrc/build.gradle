@@ -1,21 +1,21 @@
-apply plugin: 'groovy'
-
-dependencies {
-    compile gradleApi()
-    compile localGroovy()
+plugins {
+    id 'groovy'
+    id 'maven'
 }
 
-apply plugin: 'maven'
-
 repositories {
+    jcenter()
     mavenCentral()
 }
 
 dependencies {
+    compile gradleApi()
+    compile localGroovy()
+    compile 'com.phoenixnap.oss:springmvc-raml-parser:0.10.8'
     testCompile 'junit:junit:4.12'
 }
 
-group = 'org.gradle'
+group = 'com.netfalo'
 version = '1.0-SNAPSHOT'
 
 uploadArchives {
