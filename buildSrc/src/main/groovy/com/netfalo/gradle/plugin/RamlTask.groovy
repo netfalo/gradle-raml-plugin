@@ -18,7 +18,7 @@ class RamlTask extends DefaultTask {
     List<Class<?>> annotatedClasses = new ArrayList<>()
     final static String version = "1"
     String defaultMediaType = "application/json"
-    String javaDocPath = ""
+    String javaDocPath
 
     def prepareRaml() {
         ClassLoaderUtils.addLocationsToClassLoader(project)

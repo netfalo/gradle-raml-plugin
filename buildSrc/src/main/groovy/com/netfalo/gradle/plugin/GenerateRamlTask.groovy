@@ -1,6 +1,5 @@
 package com.netfalo.gradle.plugin
 
-import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 
 import com.phoenixnap.oss.ramlapisync.generation.RamlGenerator
@@ -10,29 +9,13 @@ import com.phoenixnap.oss.ramlapisync.parser.SpringMvcResourceParser
 import org.springframework.util.StringUtils
 
 class GenerateRamlTask extends RamlTask {
-    boolean restrictOnMediaType = false
-    boolean includeGlobalMediaType = false
-    boolean createPathIfMissing = false
-    boolean removeOldOutput = false
+    private boolean restrictOnMediaType = false
+    private boolean includeGlobalMediaType = false
+    private boolean createPathIfMissing = false
+    private boolean removeOldOutput = false
 
     private String outputRamlFilePath
     private String restBasePath
-
-    String getOutputRamlFilePath() {
-        outputRamlFilePath
-    }
-
-    void setOutputRamlFilePath(String outputRamlFilePath) {
-        this.outputRamlFilePath = outputRamlFilePath
-    }
-
-    String getRestBasePath() {
-        restBasePath
-    }
-
-    void setRestBasePath(String restBasePath) {
-        this.restBasePath = restBasePath
-    }
 
     @TaskAction
     def generateRaml() {
@@ -70,4 +53,53 @@ class GenerateRamlTask extends RamlTask {
         // must get basedir from project to ensure that correct basedir is used when building from parent
         return project.getProjectDir().getAbsolutePath() + File.separator + outputRamlFilePath
     }
+
+    String getOutputRamlFilePath() {
+        outputRamlFilePath
+    }
+
+    void setOutputRamlFilePath(String outputRamlFilePath) {
+        this.outputRamlFilePath = outputRamlFilePath
+    }
+
+    String getRestBasePath() {
+        restBasePath
+    }
+
+    void setRestBasePath(String restBasePath) {
+        this.restBasePath = restBasePath
+    }
+
+    boolean getRestrictOnMediaType() {
+        restrictOnMediaType
+    }
+
+    void setRestrictOnMediaType(boolean restrictOnMediaType) {
+        this.restrictOnMediaType = restrictOnMediaType
+    }
+
+    boolean getIncludeGlobalMediaType() {
+        includeGlobalMediaType
+    }
+
+    void setIncludeGlobalMediaType(boolean includeGlobalMediaType) {
+        this.includeGlobalMediaType = includeGlobalMediaType
+    }
+
+    boolean getCreatePathIfMissing() {
+        createPathIfMissing
+    }
+
+    void setCreatePathIfMissing(boolean createPathIfMissing) {
+        this.createPathIfMissing = createPathIfMissing
+    }
+
+    boolean getRemoveOldOutput() {
+        removeOldOutput
+    }
+
+    void setRemoveOldOutput(boolean removeOldOutput) {
+        this.removeOldOutput = removeOldOutput
+    }
+
 }
