@@ -3,3 +3,14 @@ plugins {
 }
 
 apply plugin: 'com.netfalo.raml'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:'1.5.4.RELEASE'
+    testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version:'1.5.4.RELEASE') {
+        exclude(module: 'commons-logging')
+    }
+}

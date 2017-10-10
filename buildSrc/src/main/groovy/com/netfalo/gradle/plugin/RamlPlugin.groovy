@@ -4,7 +4,8 @@ import org.gradle.api.Project
 import org.gradle.api.Plugin
 
 class RamlPlugin implements Plugin<Project> {
-    void apply(Project target) {
-        target.task('raml', type: RamlTask)
+    void apply(Project project) {
+        project.task('verifyRaml', type: VerifyRamlTask)
+        project.task('generateRaml', type: GenerateRamlTask)
     }
 }
