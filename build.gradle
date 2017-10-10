@@ -14,3 +14,7 @@ dependencies {
         exclude(module: 'commons-logging')
     }
 }
+
+generateRaml {
+    outputRamlFilePath = "api2.raml"
+}

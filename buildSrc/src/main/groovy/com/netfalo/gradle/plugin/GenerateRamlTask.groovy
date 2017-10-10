@@ -1,19 +1,38 @@
 package com.netfalo.gradle.plugin
 
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.TaskAction
+
 import com.phoenixnap.oss.ramlapisync.generation.RamlGenerator
 import com.phoenixnap.oss.ramlapisync.parser.ResourceParser
 import com.phoenixnap.oss.ramlapisync.parser.SpringMvcResourceParser
-import org.gradle.api.tasks.TaskAction
+
 import org.springframework.util.StringUtils
 
 class GenerateRamlTask extends RamlTask {
-
     boolean restrictOnMediaType = false
-    String restBasePath
     boolean includeGlobalMediaType = false
     boolean createPathIfMissing = false
     boolean removeOldOutput = false
-    String outputRamlFilePath = ""
+
+    private String outputRamlFilePath
+    private String restBasePath
+
+    String getOutputRamlFilePath() {
+        outputRamlFilePath
+    }
+
+    void setOutputRamlFilePath(String outputRamlFilePath) {
+        this.outputRamlFilePath = outputRamlFilePath
+    }
+
+    String getRestBasePath() {
+        restBasePath
+    }
+
+    void setRestBasePath(String restBasePath) {
+        this.restBasePath = restBasePath
+    }
 
     @TaskAction
     def generateRaml() {

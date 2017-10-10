@@ -1,7 +1,5 @@
 package com.netfalo.gradle.plugin
 
-import com.google.common.base.Strings
-import com.google.common.reflect.ClassPath
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter.DirectoryFileFilter
 import org.apache.commons.io.filefilter.TrueFileFilter
@@ -11,14 +9,10 @@ class ClassLoaderUtils {
 
     private static ClassLoader originalClassLoader
 
-    static void addLocationsToClassLoader(Project project) {
-        List<URL> urls = new ArrayList<>()
+    static def addLocationsToClassLoader(Project project) {
+        Set<URL> urls = new HashSet<>()
         try {
-            File[] artifacts = new File(project.getBuildDir().getAbsolutePath() + "/libs").listFiles()
-            for (File artifact : artifacts) {
-                urls.add(new URL("file://" + artifact.getAbsolutePath()))
-            }
-
+            urls.add(new URL("file://" + project.getBuildDir().getAbsolutePath() + "/classes/java/main/"))
         } catch (MalformedURLException e) {
             System.err.println(e.getMessage())
         }
