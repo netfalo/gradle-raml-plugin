@@ -16,7 +16,6 @@ class RamlPluginTest {
         project.pluginManager.apply 'com.netfalo.raml'
 
         assertThat(project.tasks.generateRaml, instanceOf(GenerateRamlTask))
-        assertThat(project.tasks.generateRaml.dependsOn, hasItem("build"))
     }
 
     @Test
@@ -24,6 +23,6 @@ class RamlPluginTest {
         Project project = ProjectBuilder.builder().build()
         project.pluginManager.apply 'com.netfalo.raml'
 
-        assertTrue(project.tasks.verifyRaml instanceof VerifyRamlTask)
+        assertThat(project.tasks.verifyRaml, instanceOf(VerifyRamlTask))
     }
 }

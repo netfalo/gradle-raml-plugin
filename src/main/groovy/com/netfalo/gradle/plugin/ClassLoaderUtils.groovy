@@ -4,8 +4,11 @@ import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter.DirectoryFileFilter
 import org.apache.commons.io.filefilter.TrueFileFilter
 import org.gradle.api.Project
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class ClassLoaderUtils {
+    private static Logger logger = LoggerFactory.getLogger(ClassLoaderUtils.class)
 
     private static ClassLoader originalClassLoader
 
@@ -14,7 +17,7 @@ class ClassLoaderUtils {
         try {
             urls.add(new URL("file://" + project.getBuildDir().getAbsolutePath() + "/classes/java/main/"))
         } catch (MalformedURLException e) {
-            System.err.println(e.getMessage())
+            logger.error(e.getMessage(), e)
         }
 
         originalClassLoader = Thread.currentThread().getContextClassLoader()
@@ -25,7 +28,7 @@ class ClassLoaderUtils {
 
     static def restoreOriginalClassLoader() {
         if (originalClassLoader == null) {
-            System.err.println("Original ClassLoader not available.")
+            logger.error("Original ClassLoader not available.")
         }
         Thread.currentThread().setContextClassLoader(originalClassLoader)
     }
