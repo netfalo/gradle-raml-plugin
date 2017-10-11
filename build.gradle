@@ -1,20 +1,38 @@
 plugins {
-    id 'java'
+    id 'groovy'
+    id 'jacoco'
+    id 'maven-publish'
 }
 
-apply plugin: 'com.netfalo.raml'
-
 repositories {
+    jcenter()
     mavenCentral()
 }
 
 dependencies {
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:'1.5.4.RELEASE'
-    testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version:'1.5.4.RELEASE') {
-        exclude(module: 'commons-logging')
+    compile gradleApi()
+    compile localGroovy()
+    testCompile gradleTestKit()
+
+    compile 'com.phoenixnap.oss:springmvc-raml-parser:0.10.11'
+    testCompile 'junit:junit:4.12'
+}
+
+group = 'com.netfalo'
+version = '1.0-SNAPSHOT'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
     }
 }
 
-generateRaml {
-    outputRamlFilePath = "api2.raml"
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/reports/jacoco")
+    }
 }

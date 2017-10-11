@@ -16,7 +16,6 @@ class RamlTask extends DefaultTask {
     String documentationSuffix = "-doc.md"
     Set<ApiDocumentMetadata> documents = new LinkedHashSet<>()
     List<Class<?>> annotatedClasses = new ArrayList<>()
-    final static String version = "1"
     String defaultMediaType = "application/json"
     String javaDocPath
 
@@ -36,9 +35,9 @@ class RamlTask extends DefaultTask {
             if (resourceInfo.getResourceName().endsWith(documentationSuffix)) {
                 try {
                     documents.add(new ApiDocumentMetadata(resourceInfo, documentationSuffix))
-                    this.getLog().info("Adding Documentation File " + resourceInfo.getResourceName())
+                    logger.info("Adding Documentation File " + resourceInfo.getResourceName())
                 } catch (Throwable ex) {
-                    this.getLog().warn("Skipping Resource: Unable to load" + resourceInfo.getResourceName(), ex)
+                    logger.warn("Skipping Resource: Unable to load" + resourceInfo.getResourceName(), ex)
                 }
             }
         }

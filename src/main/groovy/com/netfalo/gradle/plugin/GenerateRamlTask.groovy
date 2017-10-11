@@ -14,7 +14,7 @@ class GenerateRamlTask extends RamlTask {
     private boolean createPathIfMissing = false
     private boolean removeOldOutput = false
 
-    private String outputRamlFilePath
+    private String outputRamlFilePath = "api.raml"
     private String restBasePath
 
     @TaskAction
@@ -34,7 +34,7 @@ class GenerateRamlTask extends RamlTask {
             targetPath = project.getProjectDir()
         }
 
-        ResourceParser scanner = new SpringMvcResourceParser(targetPath, version, defaultMediaType, restrictOnMediaType)
+        ResourceParser scanner = new SpringMvcResourceParser(targetPath, project.version.toString(), defaultMediaType, restrictOnMediaType)
         RamlGenerator ramlGenerator = new RamlGenerator(scanner)
         // Process the classes selected and build Raml model
         ramlGenerator
