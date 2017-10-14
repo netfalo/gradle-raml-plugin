@@ -7,6 +7,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
+import static junit.framework.TestCase.assertTrue
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import static org.hamcrest.CoreMatchers.is
 import static org.hamcrest.MatcherAssert.assertThat
@@ -39,9 +40,10 @@ class GenerateRamlFunctionalTest {
                 .build()
 
         assertThat(result.task(":generateRaml").getOutcome(), is(SUCCESS))
+        assertTrue(new File(testProjectDir.getRoot().toString() + "/build/api.raml").exists())
     }
 
-    private void writeFile(File destination, String content) throws IOException {
+    private static void writeFile(File destination, String content) throws IOException {
         BufferedWriter output = null
         try {
             output = new BufferedWriter(new FileWriter(destination))

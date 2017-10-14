@@ -1,9 +1,9 @@
-![Travis Build Status](https://travis-ci.org/netfalo/gradle-raml-plugin.svg?branch=master)
+[![Build Status](https://travis-ci.org/netfalo/gradle-raml-plugin.svg?branch=master)](https://travis-ci.org/netfalo/gradle-raml-plugin)
 
 Gradle Plugin based on the phoenixnap/springmvc-raml-plugin:  
 https://github.com/phoenixnap/springmvc-raml-plugin
 
-Usage:
+#Usage
 After cloning: ```gradle publishToMavenLocal```
 
 In you spring project's build.gradle add this to the beginning:
