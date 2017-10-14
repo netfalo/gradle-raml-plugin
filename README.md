@@ -1,3 +1,5 @@
+![Travis Build Status](https://travis-ci.org/netfalo/gradle-raml-plugin.svg?branch=master)
+
 Gradle Plugin based on the phoenixnap/springmvc-raml-plugin:  
 https://github.com/phoenixnap/springmvc-raml-plugin
 
