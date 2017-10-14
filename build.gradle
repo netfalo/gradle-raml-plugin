@@ -1,6 +1,8 @@
 plugins {
+    id 'codenarc'
     id 'groovy'
     id 'jacoco'
+    id 'java-gradle-plugin'
     id 'maven-publish'
 }
 
@@ -10,16 +12,23 @@ repositories {
 }
 
 dependencies {
-    compile gradleApi()
     compile localGroovy()
-    testCompile gradleTestKit()
-
     compile 'com.phoenixnap.oss:springmvc-raml-parser:0.10.11'
+
     testCompile 'junit:junit:4.12'
 }
 
 group = 'com.netfalo'
-version = '1.0-SNAPSHOT'
+version = '1.0.0-SNAPSHOT'
+
+gradlePlugin {
+    plugins {
+        ramlPlugin {
+            id = 'com.netfalo.raml'
+            implementationClass = 'com.netfalo.gradle.plugin.RamlPlugin'
+        }
+    }
+}
 
 publishing {
     publications {
@@ -35,4 +44,8 @@ jacocoTestReport {
         csv.enabled false
         html.destination file("${buildDir}/reports/jacoco")
     }
+}
+
+codenarc {
+    toolVersion '1.0'
 }

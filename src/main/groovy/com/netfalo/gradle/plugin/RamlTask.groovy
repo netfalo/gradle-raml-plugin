@@ -4,26 +4,31 @@ import com.google.common.base.Strings
 import com.google.common.reflect.ClassPath
 import com.phoenixnap.oss.ramlapisync.data.ApiDocumentMetadata
 import org.gradle.api.DefaultTask
+import org.gradle.api.provider.PropertyState
+import org.gradle.api.provider.Provider
+import org.gradle.api.tasks.Input
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RestController
 
 import java.lang.annotation.Annotation
 
 class RamlTask extends DefaultTask {
-    List<String> ignoredList = new ArrayList<>()
-    List<String> dependencyPackagesList = new ArrayList<>()
-    Class<? extends Annotation>[] supportedClassAnnotations = getSupportedClassAnnotations()
+    final private Class<? extends Annotation>[] supportedClassAnnotations = getSupportedClassAnnotations()
+
+    final private PropertyState<String> defaultMediaType = project.property(String)
+    final private PropertyState<List<String>> dependencyPackagesList = (PropertyState<List<String>>) (Object) project.property(List.class)
+    final private PropertyState<List<String>> ignoredList = (PropertyState<List<String>>) (Object) project.property(List.class)
+    final private PropertyState<String> javaDocPath = project.property(String)
+
     String documentationSuffix = "-doc.md"
-    Set<ApiDocumentMetadata> documents = new LinkedHashSet<>()
-    List<Class<?>> annotatedClasses = new ArrayList<>()
-    String defaultMediaType = "application/json"
-    String javaDocPath
+    private Set<ApiDocumentMetadata> documents = new LinkedHashSet<>()
+    private List<Class<?>> annotatedClasses = new ArrayList<>()
 
     def prepareRaml() {
         ClassLoaderUtils.addLocationsToClassLoader(project)
         List<String> targetPacks = ClassLoaderUtils.loadPackages(project)
-        if (dependencyPackagesList != null && !dependencyPackagesList.isEmpty()) {
-            targetPacks.addAll(dependencyPackagesList)
+        if (!dependencyPackagesList.get().isEmpty()) {
+            targetPacks.addAll(dependencyPackagesList.get())
         }
 
         ClassPath classPath = ClassPath.from(Thread.currentThread().getContextClassLoader())
@@ -74,5 +79,65 @@ class RamlTask extends DefaultTask {
 
     static def getSupportedClassAnnotations() {
         return [Controller.class, RestController.class]
+    }
+
+    @Input
+    String getDefaultMediaType() {
+        defaultMediaType.get()
+    }
+
+    void setDefaultMediaType(String defaultMediaType) {
+        this.defaultMediaType.set(defaultMediaType)
+    }
+
+    void setDefaultMediaType(Provider<String> defaultMediaType) {
+        this.defaultMediaType.set(defaultMediaType)
+    }
+
+    @Input
+    List<String> getDependencyPackagesList() {
+        dependencyPackagesList.get()
+    }
+
+    void setDependencyPackagesList(List<String> dependencyPackagesList) {
+        this.dependencyPackagesList.set(dependencyPackagesList)
+    }
+
+    void setDependencyPackagesList(Provider<List<String>> dependencyPackagesList) {
+        this.dependencyPackagesList.set(dependencyPackagesList)
+    }
+
+    @Input
+    List<String> getIgnoredList() {
+        ignoredList.get()
+    }
+
+    void setIgnoredList(List<String> ignoredList) {
+        this.ignoredList.set(ignoredList)
+    }
+
+    void setIgnoredList(Provider<List<String>> ignoredList) {
+        this.ignoredList.set(ignoredList)
+    }
+
+    @Input
+    String getJavaDocPath() {
+        javaDocPath.get()
+    }
+
+    void getJavaDocPath(String javaDocPath) {
+        this.javaDocPath.set(javaDocPath)
+    }
+
+    void setJavaDocPath(Provider<String> javaDocPath) {
+        this.javaDocPath.set(javaDocPath)
+    }
+
+    protected Set<ApiDocumentMetadata> getDocuments() {
+        documents
+    }
+
+    protected List<Class<?>> getAnnotatedClasses() {
+        annotatedClasses
     }
 }

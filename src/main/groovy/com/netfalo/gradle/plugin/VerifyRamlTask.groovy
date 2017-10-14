@@ -50,7 +50,7 @@ class VerifyRamlTask extends RamlTask {
     boolean logErrors = true
 
     String ramlToVerifyPath
-    final static String version = "1"
+    final private static String VERSION = "1"
 
     @TaskAction
     def verifyRaml() {
@@ -75,10 +75,10 @@ class VerifyRamlTask extends RamlTask {
         RamlRoot implementedRaml = null
 
         if (checkRamlAgainstImplementation) {
-            ResourceParser scanner = new SpringMvcResourceParser(targetPath, version, ResourceParser.CATCH_ALL_MEDIA_TYPE, false)
+            ResourceParser scanner = new SpringMvcResourceParser(targetPath, VERSION, ResourceParser.CATCH_ALL_MEDIA_TYPE, false)
             RamlGenerator ramlGenerator = new RamlGenerator(scanner)
             // Process the classes selected and build Raml model
-            ramlGenerator.generateRamlForClasses(project. project.name, version, "/", classArray, this.documents)
+            ramlGenerator.generateRamlForClasses(project. project.name, VERSION, "/", classArray, this.documents)
             implementedRaml = ramlGenerator.getRaml()
 
 
