@@ -15,7 +15,7 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.netfalo', name: 'gradle-raml-plugin',
-                  version: '1.0-SNAPSHOT'
+                  version: '1.0.0-SNAPSHOT'
     }
 }
 apply plugin: 'com.netfalo.raml'
