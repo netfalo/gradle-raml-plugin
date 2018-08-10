@@ -20,6 +20,22 @@ class ClassLoaderUtils {
             logger.error(e.getMessage(), e)
         }
 
+        project.configurations.all { config ->
+                try {
+                    config.incoming.each { dependecy ->
+                        dependecy.getArtifacts().each { artifact ->
+                            try {
+                                urls.add(new URL("file://" + artifact.getFile() ))
+                            } catch (MalformedURLException e) {
+                                logger.error(e.getMessage(), e)
+                            }
+                        }
+                    }
+                } catch(Exception e) {
+                    logger.error("could not get deps from: " + config.getName())
+                }
+        }
+
         originalClassLoader = Thread.currentThread().getContextClassLoader()
 
         Thread.currentThread().setContextClassLoader(
