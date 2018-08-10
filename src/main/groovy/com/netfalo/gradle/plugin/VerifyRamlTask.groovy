@@ -28,41 +28,43 @@ import org.springframework.http.HttpStatus
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import org.springframework.util.StringUtils
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 
 class VerifyRamlTask extends RamlTask {
-    boolean checkRamlAgainstImplementation = true
-    String uriPrefixToIgnore
-    boolean performStyleChecks = true
-    boolean checkForResourceExistence = true
-    boolean checkForActionExistence = true
-    boolean checkForActionContentType = true
-    boolean checkForQueryParameterExistence = true
-    boolean checkForPluralisedResourceNames = true
-    boolean checkForSpecialCharactersInResourceNames = true
-    boolean checkForDefinitionOf40xResponseInSecuredResource = true
-    String checkForSchemaInSuccessfulResponseBody
-    boolean checkForDefinitionOfErrorCodes = false
-    String checkForSchemaInRequestBody
-    boolean checkForDefinitionOf404ResponseInGetRequest = false
-    boolean checkForResponseBodySchema = false
-    boolean breakBuildOnWarnings = false
-    boolean logWarnings = true
-    boolean logErrors = true
+    private boolean checkRamlAgainstImplementation = project.extensions.raml.verify.checkRamlAgainstImplementation
+    private String uriPrefixToIgnore = project.extensions.raml.verify. uriPrefixToIgnore
+    private boolean performStyleChecks = project.extensions.raml.verify. performStyleChecks
+    private boolean checkForResourceExistence = project.extensions.raml.verify. checkForResourceExistence
+    private boolean checkForActionExistence = project.extensions.raml.verify. checkForActionExistence
+    private boolean checkForActionContentType = project.extensions.raml.verify. checkForActionContentType
+    private boolean checkForQueryParameterExistence = project.extensions.raml.verify. checkForQueryParameterExistence
+    private boolean checkForPluralisedResourceNames = project.extensions.raml.verify. checkForPluralisedResourceNames
+    private boolean checkForSpecialCharactersInResourceNames = project.extensions.raml.verify. checkForSpecialCharactersInResourceNames
+    private boolean checkForDefinitionOf40xResponseInSecuredResource = project.extensions.raml.verify. checkForDefinitionOf40xResponseInSecuredResource
+    private String checkForSchemaInSuccessfulResponseBody = project.extensions.raml.verify.checkForSchemaInSuccessfulResponseBody
+    private boolean checkForDefinitionOfErrorCodes = project.extensions.raml.verify.checkForDefinitionOfErrorCodes
+    private String checkForSchemaInRequestBody = project.extensions.raml.verify.checkForSchemaInRequestBody
+    private boolean checkForDefinitionOf404ResponseInGetRequest = project.extensions.raml.verify.checkForDefinitionOf404ResponseInGetRequest
+    private boolean checkForResponseBodySchema = project.extensions.raml.verify.checkForResponseBodySchema
+    private boolean breakBuildOnWarnings = project.extensions.raml.verify.breakBuildOnWarnings
+    private boolean logWarnings = project.extensions.raml.verify.logWarnings
+    private boolean logErrors = project.extensions.raml.verify.logErrors
 
-    String ramlToVerifyPath
     final private static String VERSION = "1"
+    private static Logger logger = LoggerFactory.getLogger(ClassLoaderUtils.class)
 
     @TaskAction
     def verifyRaml() {
         prepareRaml()
-
         Class<?>[] classArray = new Class[annotatedClasses.size()]
         classArray = this.annotatedClasses.toArray(classArray)
 
         //Lets use the base folder if supplied or default to relative scanning
         File targetPath
-        if (StringUtils.hasText(javaDocPath)) {
-            targetPath = new File(javaDocPath)
+        if (StringUtils.hasText(project.extensions.raml.javaDocPath)) {
+            targetPath = new File(project.extensions.raml.javaDocPath)
         } else if (project.getProjectDir().getParentFile() != null) {
             targetPath = project.getProjectDir().getParentFile()
         } else {
@@ -77,10 +79,10 @@ class VerifyRamlTask extends RamlTask {
         if (checkRamlAgainstImplementation) {
             ResourceParser scanner = new SpringMvcResourceParser(targetPath, VERSION, ResourceParser.CATCH_ALL_MEDIA_TYPE, false)
             RamlGenerator ramlGenerator = new RamlGenerator(scanner)
-            // Process the classes selected and build Raml model
-            ramlGenerator.generateRamlForClasses(project. project.name, VERSION, "/", classArray, this.documents)
-            implementedRaml = ramlGenerator.getRaml()
 
+            // Process the classes selected and build Raml model
+            ramlGenerator.generateRamlForClasses(project.name, VERSION, "/", classArray, this.documents)
+            implementedRaml = ramlGenerator.getRaml()
 
             if (checkForResourceExistence) {
                 checkers.add(new ResourceExistenceChecker())
@@ -100,7 +102,6 @@ class VerifyRamlTask extends RamlTask {
         }
 
         List<RamlStyleChecker> styleCheckers = new ArrayList<>()
-
 
         if (performStyleChecks) {
             if (checkForPluralisedResourceNames) {
@@ -139,8 +140,7 @@ class VerifyRamlTask extends RamlTask {
             }
         }
 
-
-        RamlRoot loadRamlFromFile = RamlLoader.loadRamlFromFile(ramlToVerifyPath)
+        RamlRoot loadRamlFromFile = RamlLoader.loadRamlFromFile(project.extensions.raml.verify.ramlFile)
 
         RamlVerifier verifier = new RamlVerifier(loadRamlFromFile, implementedRaml, checkers, actionCheckers, resourceCheckers, styleCheckers, StringUtils.hasText(uriPrefixToIgnore) ? uriPrefixToIgnore : null)
         if (verifier.hasWarnings() && logWarnings) {
@@ -160,157 +160,4 @@ class VerifyRamlTask extends RamlTask {
             throw new IllegalStateException("Warnings found when comparing RAML to Spring MVC Implementation and build is set to break on Warnings")
         }
     }
-
-    String getRamlToVerifyPath() {
-        ramlToVerifyPath
-    }
-
-    def setRamlToVerifyPath(String ramlToVerifyPath) {
-        this.ramlToVerifyPath = ramlToVerifyPath
-    }
-
-    boolean getCheckRamlAgainstImplementation() {
-        return checkRamlAgainstImplementation
-    }
-
-    void setCheckRamlAgainstImplementation(boolean checkRamlAgainstImplementation) {
-        this.checkRamlAgainstImplementation = checkRamlAgainstImplementation
-    }
-
-    String getUriPrefixToIgnore() {
-        return uriPrefixToIgnore
-    }
-
-    void setUriPrefixToIgnore(String uriPrefixToIgnore) {
-        this.uriPrefixToIgnore = uriPrefixToIgnore
-    }
-
-    boolean getPerformStyleChecks() {
-        return performStyleChecks
-    }
-
-    void setPerformStyleChecks(boolean performStyleChecks) {
-        this.performStyleChecks = performStyleChecks
-    }
-
-    boolean getCheckForResourceExistence() {
-        return checkForResourceExistence
-    }
-
-    void setCheckForResourceExistence(boolean checkForResourceExistence) {
-        this.checkForResourceExistence = checkForResourceExistence
-    }
-
-    boolean getCheckForActionExistence() {
-        return checkForActionExistence
-    }
-
-    void setCheckForActionExistence(boolean checkForActionExistence) {
-        this.checkForActionExistence = checkForActionExistence
-    }
-
-    boolean getCheckForActionContentType() {
-        return checkForActionContentType
-    }
-
-    void setCheckForActionContentType(boolean checkForActionContentType) {
-        this.checkForActionContentType = checkForActionContentType
-    }
-
-    boolean getCheckForQueryParameterExistence() {
-        return checkForQueryParameterExistence
-    }
-
-    void setCheckForQueryParameterExistence(boolean checkForQueryParameterExistence) {
-        this.checkForQueryParameterExistence = checkForQueryParameterExistence
-    }
-
-    boolean getCheckForPluralisedResourceNames() {
-        return checkForPluralisedResourceNames
-    }
-
-    void setCheckForPluralisedResourceNames(boolean checkForPluralisedResourceNames) {
-        this.checkForPluralisedResourceNames = checkForPluralisedResourceNames
-    }
-
-    boolean getCheckForSpecialCharactersInResourceNames() {
-        return checkForSpecialCharactersInResourceNames
-    }
-
-    void setCheckForSpecialCharactersInResourceNames(boolean checkForSpecialCharactersInResourceNames) {
-        this.checkForSpecialCharactersInResourceNames = checkForSpecialCharactersInResourceNames
-    }
-
-    boolean getCheckForDefinitionOf40xResponseInSecuredResource() {
-        return checkForDefinitionOf40xResponseInSecuredResource
-    }
-
-    void setCheckForDefinitionOf40xResponseInSecuredResource(boolean checkForDefinitionOf40xResponseInSecuredResource) {
-        this.checkForDefinitionOf40xResponseInSecuredResource = checkForDefinitionOf40xResponseInSecuredResource
-    }
-
-    String getCheckForSchemaInSuccessfulResponseBody() {
-        return checkForSchemaInSuccessfulResponseBody
-    }
-
-    void setCheckForSchemaInSuccessfulResponseBody(String checkForSchemaInSuccessfulResponseBody) {
-        this.checkForSchemaInSuccessfulResponseBody = checkForSchemaInSuccessfulResponseBody
-    }
-
-    boolean getCheckForDefinitionOfErrorCodes() {
-        return checkForDefinitionOfErrorCodes
-    }
-
-    void setCheckForDefinitionOfErrorCodes(boolean checkForDefinitionOfErrorCodes) {
-        this.checkForDefinitionOfErrorCodes = checkForDefinitionOfErrorCodes
-    }
-
-    String getCheckForSchemaInRequestBody() {
-        return checkForSchemaInRequestBody
-    }
-
-    void setCheckForSchemaInRequestBody(String checkForSchemaInRequestBody) {
-        this.checkForSchemaInRequestBody = checkForSchemaInRequestBody
-    }
-
-    boolean getCheckForDefinitionOf404ResponseInGetRequest() {
-        return checkForDefinitionOf404ResponseInGetRequest
-    }
-
-    void setCheckForDefinitionOf404ResponseInGetRequest(boolean checkForDefinitionOf404ResponseInGetRequest) {
-        this.checkForDefinitionOf404ResponseInGetRequest = checkForDefinitionOf404ResponseInGetRequest
-    }
-
-    boolean getCheckForResponseBodySchema() {
-        return checkForResponseBodySchema
-    }
-
-    void setCheckForResponseBodySchema(boolean checkForResponseBodySchema) {
-        this.checkForResponseBodySchema = checkForResponseBodySchema
-    }
-
-    boolean getBreakBuildOnWarnings() {
-        return breakBuildOnWarnings
-    }
-
-    void setBreakBuildOnWarnings(boolean breakBuildOnWarnings) {
-        this.breakBuildOnWarnings = breakBuildOnWarnings
-    }
-
-    boolean getLogWarnings() {
-        return logWarnings
-    }
-
-    void setLogWarnings(boolean logWarnings) {
-        this.logWarnings = logWarnings
-    }
-
-    boolean getLogErrors() {
-        return logErrors
-    }
-
-    void setLogErrors(boolean logErrors) {
-        this.logErrors = logErrors
-    }
-
 }

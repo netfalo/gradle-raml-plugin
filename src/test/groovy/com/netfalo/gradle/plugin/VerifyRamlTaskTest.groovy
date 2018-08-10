@@ -11,6 +11,9 @@ class VerifyRamlTaskTest {
     @Test
     void canAddTaskToProject() {
         Project project = ProjectBuilder.builder().build()
+        project.extensions.add('raml', RamlPluginExtension)
+        project.extensions.raml.extensions.add('verify', VerifyRamlExtension)
+
         def task = project.task('verifyRaml', type: VerifyRamlTask)
         assertThat(task, instanceOf(VerifyRamlTask))
     }

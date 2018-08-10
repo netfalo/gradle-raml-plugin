@@ -11,6 +11,9 @@ class GenerateRamlTaskTest {
     @Test
     void canAddTaskToProject() {
         Project project = ProjectBuilder.builder().build()
+        project.extensions.add('raml', RamlPluginExtension)
+        project.extensions.raml.extensions.add('generate', GenerateRamlExtension)
+
         def task = project.task('generateRaml', type: GenerateRamlTask)
         assertThat(task, instanceOf(GenerateRamlTask))
     }
