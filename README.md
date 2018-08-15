@@ -16,8 +16,16 @@ plugins {
 ```
 
 ## Tasks
-There are two new tasks added with the plugin
-verifyRaml and generateRaml they are by default depending on the build task
+##### verifyRaml: 
+start a verification from a already existing raml file
+
+``` gradle verifyRaml ```
+
+##### generateRaml:
+generates a raml file from the current code
+
+``` gradle generateRaml ```
+
 
 # Configuration
 
